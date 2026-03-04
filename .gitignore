@@ -1,0 +1,36 @@
+# Created by venv; see https://docs.python.org/3/library/venv.html
+# =========================
+# Virtual environment (racine actuelle)
+# =========================
+bin/
+lib/
+lib64/
+include/
+pyvenv.cfg
+venv/
+.venv/
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+
+# =========================
+# dbt
+# =========================
+target/
+dbt_packages/
+logs/
+
+# =========================
+# IDE
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
