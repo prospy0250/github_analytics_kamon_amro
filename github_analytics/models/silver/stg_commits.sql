@@ -10,7 +10,7 @@ cleaned as (
     select
         repo_full_name as repo_id,
         sha as commit_sha,
-        coalesce(author_login, 'Unknown'),
+        coalesce(author_login, 'Unknown') as author_login,
         cast(author_date as timestamp) as author_date,
         committer_login,
         cast(committer_date as timestamp) as committer_date,

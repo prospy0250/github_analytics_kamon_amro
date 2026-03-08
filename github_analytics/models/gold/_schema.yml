@@ -1,0 +1,72 @@
+version: 2
+
+models:
+
+  - name: dim_repository
+    description: Repository dimension
+    columns:
+
+      - name: repo_id
+        tests:
+          - not_null
+          - unique
+
+      - name: language
+        tests:
+          - not_null
+
+  - name: dim_contributor
+    description: Contributor dimension
+    columns:
+
+      - name: contributor_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_date
+    description: Date dimension
+    columns:
+
+      - name: date_id
+        tests:
+          - not_null
+          - unique
+
+  - name: fact_repo_activity
+    description: Daily repository activity fact table
+    columns:
+
+      - name: repo_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_repository')
+              field: repo_id
+
+      - name: date_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_id
+
+  - name: scoring_repositories
+    description: Repository ranking and scoring
+    columns:
+
+      - name: repo_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_repository')
+              field: repo_id
+
+      - name: repo_rank
+        tests:
+          - not_null
+          - unique
+
+      - name: score_global
+        tests:
+          - not_null

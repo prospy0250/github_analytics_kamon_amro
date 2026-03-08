@@ -1,0 +1,86 @@
+version: 2
+
+models:
+
+  - name: stg_repositories
+    description: Cleaned repository metadata
+    columns:
+
+      - name: repo_id
+        tests:
+          - not_null
+          - unique
+
+      - name: language
+        tests:
+          - not_null
+
+      - name: repo_age_days
+        tests:
+          - not_null
+
+  - name: stg_commits
+    description: Cleaned commits
+    columns:
+
+      - name: commit_sha
+        tests:
+          - not_null
+          - unique
+
+      - name: repo_id
+        tests:
+          - not_null
+
+      - name: author_date
+        tests:
+          - not_null
+
+      - name: day_of_week
+        tests:
+          - accepted_values:
+              values: [0,1,2,3,4,5,6]
+
+      - name: hour_of_day
+        tests:
+          - accepted_values:
+              values: [0,1,2,3,4,5,6,7,8,9,10,11,12,
+                       13,14,15,16,17,18,19,20,21,22,23]
+
+  - name: stg_pull_requests
+    description: Cleaned pull requests
+    columns:
+
+      - name: pr_number
+        tests:
+          - not_null
+
+      - name: repo_full_name
+        tests:
+          - not_null
+
+      - name: state
+        tests:
+          - accepted_values:
+              values: ['open','closed']
+
+      - name: is_merged
+        tests:
+          - not_null
+
+  - name: stg_issues
+    description: Cleaned issues
+    columns:
+
+      - name: issue_number
+        tests:
+          - not_null
+
+      - name: repo_id
+        tests:
+          - not_null
+
+      - name: state
+        tests:
+          - accepted_values:
+              values: ['open','closed']
