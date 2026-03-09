@@ -1,5 +1,12 @@
 -- models/silver/stg_commits.sql
-{{ config(materialized='view') }}
+{{
+config(
+    materialized='incremental',
+    schema='silver',
+    unique_key='sha',
+    incremental_strategy='append'
+)
+}}
 
 with source as (
     select *
@@ -24,3 +31,10 @@ cleaned as (
 
 select *
 from cleaned
+
+{% if is_incremental() %}
+
+where author_date >
+    (select max(author_date) from {{ this }})
+
+{% endif %}

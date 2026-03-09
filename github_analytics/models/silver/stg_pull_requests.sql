@@ -1,5 +1,12 @@
 -- models/silver/stg_pull_requests.sql
-{{ config(materialized='view') }}
+{{
+config(
+    materialized='incremental',
+    schema='silver',
+    unique_key='repo_full_name',
+    incremental_strategy='merge'
+)
+}}
 
 with source as (
     select *
@@ -38,3 +45,10 @@ cleaned as (
 
 select *
 from cleaned
+
+{% if is_incremental() %}
+
+where updated_at >
+    (select max(updated_at) from {{ this }})
+
+{% endif %}

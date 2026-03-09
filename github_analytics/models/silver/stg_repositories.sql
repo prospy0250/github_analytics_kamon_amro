@@ -1,10 +1,17 @@
 -- models/silver/stg_repositories.sql
-{{ config(materialized='view') }}
-
+{{
+config(
+    materialized='incremental',
+    schema='silver',
+    unique_key='repo_id',
+    incremental_strategy='merge'
+)
+}}
 with source as (
     select *
     from {{ source('bronze', 'raw_repositories') }}
 ),
+
 
 cleaned as (
     select
@@ -46,8 +53,15 @@ cleaned as (
         ) as repo_age_days
 
     from source
-    where coalesce(cast(archived as boolean), false) = false
+    where coalesce(cast(archived as boolean), false) = false 
 )
 
 select *
 from cleaned
+
+{% if is_incremental() %}
+
+where updated_at >
+    (select max(updated_at) from {{ this }})
+
+{% endif %}

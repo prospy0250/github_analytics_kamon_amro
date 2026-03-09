@@ -1,6 +1,12 @@
 -- models/silver/stg_issues.sql
-{{ config(materialized='view') }}
-
+{{
+config(
+    materialized='incremental',
+    schema='silver',
+    unique_key='issue_number',
+    incremental_strategy='merge'
+)
+}}
 with source as (
     select *
     from {{ source('bronze', 'raw_issues') }}
@@ -35,3 +41,12 @@ cleaned as (
 
 select *
 from cleaned where is_pull_request = false
+
+{% if is_incremental() %}
+
+and updated_at >
+    (select max(updated_at) from {{ this }})
+
+{% endif %}
+
+

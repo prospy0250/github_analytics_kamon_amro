@@ -129,7 +129,7 @@ select
         score_responsiveness * 0.3
     ) as score_global,
 
-    rank() over (
+    row_number() over (
         order by
         (
             score_popularity * 0.2 +
